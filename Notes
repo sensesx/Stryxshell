@@ -1,0 +1,7 @@
+Functions:
+
+
+- getyx()	- Get Y X values
+- getbegyx()	- Get beginning Y X values of an specific window
+- getmaxyz()	- Get maximum Y X values of an specefic window
+- Keypad	- Make control functions printable
