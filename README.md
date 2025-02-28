@@ -1,3 +1,5 @@
+# Stryxshell
+
 Shell made with ncurses :)
 
 SOME FIXES NEED TO BE MADE REGARDING THE SCREEN.
