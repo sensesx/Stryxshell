@@ -4,19 +4,21 @@
  * 
  */
 
-
 #include <stdio.h>
+#include "HEADERS.h"
+#include <time.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
 #include <string.h>
 #include <locale.h>
 
-
+#define CBLUE "\x1b[31;m"
+#define CGREEN "\x1b[32;m"
 
 // TODO: Fix resize window issue. It doens't refresh the way it should.
 // Lookup for functions that would fix this problem.
-
+// REMINDER: SOME THINGS ARE JUST THERE TO MAKE THE APPLICATION BEAUTIFUL AND ANIMATED.
 
 char *appNameGfx[220] = {
 "███████╗████████╗██████╗ ██╗   ██╗██╗  ██╗███████╗██╗  ██╗███████╗██╗     ██╗",
@@ -33,6 +35,38 @@ char *developedBySensesx[3] = {
 "╚════════════════════════════════════════════════╝"
 };
 
+char *blobOutput[] = { "[ OK ]	Finished loading shell.service",
+"[ OK ]	Started main processes",
+"[ OK ]	Time-date configured automatically",
+"[ OK ]	Setting default configurations for the user",
+"[ OK ]	Starting network manager service",
+"[ OK ]	Checking internet status.",
+"[ OK ]	Checking user configurations.",
+"[ OK ]	Checking keyboard configurations.",
+"[ OK ]	Initializing malware protection tool.",
+"[ OK ]	Restoring terminal snapshot from last session.",
+"[ OK ]	Checking kernel status.",
+"[ OK ]	Completed main configurations",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+"[ OK ]	Initializing shell",
+};
+
+struct timespec timer, timer2;
+
 int j = 2;
 
 void printBanners(WINDOW *p, char **banner, int linecount, int startline, int startcol){
@@ -40,25 +74,26 @@ void printBanners(WINDOW *p, char **banner, int linecount, int startline, int st
 		mvwprintw(p, j++ + startline, startcol,"%s", banner[i]);
 		wrefresh(p);
 	}
-
 }
 
 void blobSimulation(WINDOW *p){
-
+	for(int i = 0; i <= 20; i++){
+		mvwprintw(p, i+1, 1, "%s", blobOutput[i]);
+		wrefresh(p);
+		nanosleep(&timer, &timer2);
+	}
 }
 
-
-
-char *whoami;
 char bufferInput[256];
 
 int main(){
+	timer.tv_nsec = 200000000;
+	timer.tv_sec = 0;
 	//raw(); || Control chars are not interpreted by shell
 	//noecho(); || User input is not printed on the screen
 	cbreak(); // Control keys are granted to work 
 
 	setlocale(LC_ALL, "");
-	whoami = getenv("USER");
 	initscr();
 	if(!has_colors()){ // change colors later with init_color ?
 		printw("Terminal doesn't support colors");
@@ -141,33 +176,26 @@ int main(){
 	WINDOW *shell = newwin(boxHeight, boxWidth, startY, startX);
 
 	if(strcmp(options[cursorHighlight], options[0]) == 0){
+		blobSimulation(shell);
+		sleep(2);
+		execshell(shell);
+	//	
+	}
+	if(strcmp(options[cursorHighlight], options[1]) == 0){
 		wprintw(shell, "hi");
 		wrefresh(shell);
 	}
-	if(strcmp(options[cursorHighlight], options[0]) == 0){
+	if(strcmp(options[cursorHighlight], options[2]) == 0){
 		wprintw(shell, "hi");
 		wrefresh(shell);
 	}
-	if(strcmp(options[cursorHighlight], options[0]) == 0){
-		wprintw(shell, "hi");
-		wrefresh(shell);
-	}
-	if(strcmp(options[cursorHighlight], options[0]) == 0){
-		wprintw(shell, "hi");
-		wrefresh(shell);
+	if(strcmp(options[cursorHighlight], options[3]) == 0){
+		endwin();
+		exit(1);
 	}
 
-
-
-
-
-
-
-
-	int c = getch();
 	endwin();
 
 	return 0;
 }
-
 
