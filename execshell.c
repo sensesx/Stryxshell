@@ -20,11 +20,10 @@ int z = 0;
 
 bool checkcommand(char *buf){
 	int masterFd, slaveFd;
-
 	bool commandExists = false;
 	bool hasArgs = false;
 	char command[64];
-	char commandexec[64];
+	char commandexec[100];
 	char slaveName[64];
 
 	for(int i = 0; ; i++){
@@ -46,11 +45,33 @@ bool checkcommand(char *buf){
 		wprintw(shell, "%s: command not found\n", command);
 		return false;
 	}
+	
 	openpty(&masterFd, &slaveFd, slaveName, NULL, NULL);
 
 	if(hasArgs == false){
 		snprintf(commandexec, sizeof(commandexec), "./builtins/%s", command);
+	}else{
+
+	}
+
+	int pid = fork();
+	char buffer[1024] = {0};
+
+	if(pid == 0){
+		close(masterFd);
+		dup2(slaveFd, STDIN_FILENO);
+		dup2(slaveFd, STDOUT_FILENO);
+		dup2(slaveFd, STDERR_FILENO);
+		close(slaveFd);
 		execv(commandexec, NULL);
+		exit(1);
+	}else{
+		raw();
+		close(slaveFd);
+		read(masterFd, buffer, sizeof(buffer));
+		wprintw(shell, "\n%s", buffer);
+		wrefresh(shell);
+		close(masterFd);
 	}
 	return true;
 }
@@ -72,13 +93,7 @@ char *readexec(char *buffer){
 	else{
 		wprintw(shell, "espaço treis");
 	}
-
-
-
-	/*execv(buffer, NULL, NULL);*/
 }
-
-
 
 void errmessage(){
 
@@ -96,7 +111,6 @@ void execshell(void *p){
 	buildUser(whoami, pwd);
 	werase(shell);
 	while(1){
-
 		wprintw(shell, "%s", userbuffer);
 		wrefresh(shell);
 		wgetstr(shell, userinput);
