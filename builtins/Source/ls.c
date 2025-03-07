@@ -12,8 +12,7 @@ int main(int argc, char *argv[]){
 		PWD = getenv("PWD");
 		directory = opendir(PWD);
 		while((dirRead = readdir(directory)) != NULL){
-			fprintf(stdout, "%s\n", dirRead->d_name);
+			fprintf(stdout, "\n%s", dirRead->d_name);
 		}
-
 	}
 }

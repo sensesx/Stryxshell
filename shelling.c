@@ -184,6 +184,7 @@ int main(){
 	if(strcmp(options[cursorHighlight], options[1]) == 0){
 		wprintw(shell, "hi");
 		wrefresh(shell);
+		getch();
 	}
 	if(strcmp(options[cursorHighlight], options[2]) == 0){
 		wprintw(shell, "hi");

@@ -14,6 +14,8 @@ char userbuffer[50];
 char userinput[2058];
 DIR *directory;
 struct dirent *dir;
+FILE *fp;
+FILE *temp;
 
 int i = 0;
 int z = 0; 
@@ -56,6 +58,8 @@ bool checkcommand(char *buf){
 
 	int pid = fork();
 	char buffer[1024] = {0};
+	char lines[256];
+	int bytes_read;
 
 	if(pid == 0){
 		close(masterFd);
@@ -66,10 +70,15 @@ bool checkcommand(char *buf){
 		execv(commandexec, NULL);
 		exit(1);
 	}else{
-		raw();
 		close(slaveFd);
 		read(masterFd, buffer, sizeof(buffer));
-		wprintw(shell, "\n%s", buffer);
+		for(int i = 0; i <= strlen(buffer); i++){
+			if(buffer[i] == '\n' || buffer[i] > 32){ // Bigger than control characters dec
+								 // It's better to print one by one because some control characters mess up with the functionality
+				waddch(shell, buffer[i]);
+				wrefresh(shell);
+			}
+		}
 		wrefresh(shell);
 		close(masterFd);
 	}
