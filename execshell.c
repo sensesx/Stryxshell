@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include <pty.h>
 
@@ -70,8 +71,11 @@ bool checkcommand(char *buf){
 		execv(commandexec, NULL);
 		exit(1);
 	}else{
+		wait(NULL);
 		close(slaveFd);
+		memset(buffer, 0, sizeof(buffer));
 		read(masterFd, buffer, sizeof(buffer));
+		scrollok(shell, TRUE);
 		for(int i = 0; i <= strlen(buffer); i++){
 			if(buffer[i] == '\n' || buffer[i] > 32){ // Bigger than control characters dec
 								 // It's better to print one by one because some control characters mess up with the functionality
@@ -79,7 +83,6 @@ bool checkcommand(char *buf){
 				wrefresh(shell);
 			}
 		}
-		wrefresh(shell);
 		close(masterFd);
 	}
 	return true;
