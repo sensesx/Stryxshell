@@ -77,6 +77,8 @@ void printBanners(WINDOW *p, char **banner, int linecount, int startline, int st
 }
 
 void blobSimulation(WINDOW *p){
+	timer.tv_nsec = 200000000;
+	timer.tv_sec = 0;
 	for(int i = 0; i <= 20; i++){
 		mvwprintw(p, i+1, 1, "%s", blobOutput[i]);
 		wrefresh(p);
@@ -87,12 +89,9 @@ void blobSimulation(WINDOW *p){
 char bufferInput[256];
 
 int main(){
-	timer.tv_nsec = 200000000;
-	timer.tv_sec = 0;
 	//raw(); || Control chars are not interpreted by shell
 	//noecho(); || User input is not printed on the screen
 	cbreak(); // Control keys are granted to work 
-
 	setlocale(LC_ALL, "");
 	initscr();
 	if(!has_colors()){ // change colors later with init_color ?

@@ -1,6 +1,5 @@
 #include <dirent.h>
 #include <stdio.h>
-#include "../../HEADERS.h"
 #include <stdlib.h>
 
 DIR *directory;
@@ -11,9 +10,9 @@ int main(int argc, char *argv[]){
 	if(argc < 2){
 		PWD = getenv("PWD");
 		directory = opendir(PWD);
-		fprintf(stdout, "Output from ls:\n");
+		fprintf(stdout, "\nListing directory (%s):\n", PWD);
 		while((dirRead = readdir(directory)) != NULL){
-			fprintf(stdout, "\n%s", dirRead->d_name);
+			fprintf(stdout, "%s\n", dirRead->d_name);
 		}
 		closedir(directory);
 	}
