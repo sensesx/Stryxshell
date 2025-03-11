@@ -6,6 +6,7 @@ This project is made only for testing purposes. Security is not a priority since
 and testing builtins, commands, normal shell procedures and other stuff. 
 
 Im testing only on my main computer, so it may not work properly over there. 
+There are some bad practices since this is just an attempt to understand the internals of how some syscalls are made, shell procedures and memory in general.
 
 #### SOME FIXES NEED TO BE MADE REGARDING THE SCREEN AND NCURSES.
 #### I don't know if anyone in the field would use this on production. DON'T DO IT FOR OBVIOUS REASONS.
