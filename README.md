@@ -11,5 +11,5 @@ There are some bad practices since this is just an attempt to understand the int
 #### SOME FIXES NEED TO BE MADE REGARDING THE SCREEN AND NCURSES.
 #### I don't know if anyone in the field would use this on production. DON'T DO IT FOR OBVIOUS REASONS.
 
-Checkout for more stuff on my github profile. I plan on posting more about Malware developing and Analysis, reverse engineering, assembly and other on the future =)
+Checkout for more stuff on my github profile. I plan on posting more about Malware developing and Analysis, reverse engineering, assembly and other stuff in the future =)
 
