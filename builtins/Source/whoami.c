@@ -2,6 +2,9 @@
 #include <stdio.h>
 
 
-int main(){
+char *whoami;
 
+int main(){
+	whoami = getenv("USER");
+	printf("%s\n", whoami);
 }

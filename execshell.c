@@ -5,22 +5,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <pty.h>
-#include <cjson/cJSON.h>
 
 WINDOW *shell;
 char *whoami;
 char *pwd;
 char userbuffer[50];
-char userinput[2058];
+char userinput[256];
 DIR *directory;
 struct dirent *dir;
 FILE *fp;
 FILE *temp;
 
 
-bool checkcommand(char *buf){
+int checkcommand(char *buf, char *pwd){
 	int masterFd, slaveFd;
 	bool commandExists = false;
 	bool hasArgs = false;
@@ -28,10 +28,9 @@ bool checkcommand(char *buf){
 	char commandexec[100];
 	char slaveName[64];
 	char *args[20] = {0};
-
-	for(int i = 0; ; i++){
+		for(int i = 0; ; i++){
 		if(buf[i] == '\x0' || buf[i] == '\n' || buf[i] == '\x20' || buf[i] == '\x10'){
-			command[i += 2] = '\x00';
+			command[i] = '\x00';
 			break;
 		}
 		command[i] = buf[i];
@@ -44,18 +43,15 @@ bool checkcommand(char *buf){
 		}
 		wrefresh(shell);
 	}
-	if(!commandExists){
-		wprintw(shell, "%s: command not found\n", command);
-		return false;
-	}
+
+	// Dealing with exported functions -> Not the best way of course
+	
 
 	int argc = 0;
 	char *token = strtok(buf, " ");  
 	int i = 0;
-
 	// Parse arguments
 	while(token != NULL){
-		wprintw(shell, "Parsed: %s\n", token);
 		args[i++] = token;
 		argc ++;
         	token = strtok(NULL, " ");
@@ -63,6 +59,20 @@ bool checkcommand(char *buf){
 
 	if(argc >= 2){
 		hasArgs = true;	
+	}
+
+	if(!commandExists){
+		if(hasArgs){
+			if(strcmp(args[0], "printf") == 0){
+				printf_t(buf, shell);
+				return true;
+			}else{
+				wprintw(shell, "%s: command not found\n", buf);
+				return false;
+			}
+		}		
+		wprintw(shell, "%s: command not found\n", buf);
+		return false;
 	}
 		
 	openpty(&masterFd, &slaveFd, slaveName, NULL, NULL);
@@ -81,7 +91,7 @@ bool checkcommand(char *buf){
 			execv(commandexec, NULL);
 			exit(1);
 		}else{	
-			execv(commandexec, NULL);
+			execv(commandexec, args);
 			exit(1);
 		}
 
@@ -105,41 +115,33 @@ bool checkcommand(char *buf){
 	return true;
 }
 
-void readexec(char *buffer){
-	checkcommand(buffer);
-	if(buffer == NULL){
-		wrefresh(shell);
-	}
-	if(buffer[0] == '\x20'){
-		wrefresh(shell);
-	}
-}
-
-void errmessage(){
-
-}
-
-
 void buildUser(char *pwdbuf, char *hostbuf){
 	snprintf(userbuffer, sizeof(userbuffer), "[%s]@[%s]:", pwdbuf, hostbuf);
 }
 
 FILE *settings;
-
+int retstatus;
 
 void execshell(void *p){
+	init_pair(2, COLOR_GREEN, 0);
 	shell = (WINDOW *)p;
 	whoami = getenv("USER");
 	pwd = getenv("PWD");
 	buildUser(whoami, pwd);
 	werase(shell);
-	settings = fopen("./settings/shell.json", "r");
 
 	wprintw(shell, "STRYXSHELL TERMINAL V1.0 - For more information or help, type help in the terminal.\n\n");
+
 	while(1){
-		wprintw(shell, "%s", userbuffer);
+		wattron(shell, COLOR_PAIR(2));
+		wprintw(shell, "%s", userbuffer); // future changes are going to be made for redirection i/o
+		wattroff(shell, COLOR_PAIR(2));
 		wrefresh(shell);
 		wgetstr(shell, userinput);
-		readexec(userinput);
+		if(iscntrl(userinput[0])){
+			wrefresh(shell);
+			continue;
+		}
+		retstatus = checkcommand(userinput, pwd);
 	}
 }

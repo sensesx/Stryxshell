@@ -4,22 +4,22 @@
 int main(){
 	fprintf(stdout, "\nHelp command show you all commands you need to use this terminal and a brief explanation about them.\nType <help \"command\"> to see the manual about certain program or type <man \"command\">\n ");
 	fprintf(stdout, "\n\
-ls <args>:\tlist given directory contents\n\
-cd <args>:\tchange directory\n\
-adduser:\tadd user to terminal\n\
-deluser:\tdel terminal user\n\
-man <args>:\thelp with commands\n\
-pwd:\t\tprint current directory\n\
-printf <string>\tprint string to screen\n\
-time:\t\tshows current time\n\
-useradd <args>:\tadd user\n\
-userdel <args>:\tdelete user\n\
-whoami:\t\tshows current user\n\
-exit:\t\texits the terminal\n\
-loguser:\t\tuse another account\n\
-cat <file>:\tprint file contents\n\
-echo <string>:\techoes string to the screen\n\
-exec <args>:\texecutes command\n\
-vimmer:\t\tsimple text editor\n\
+ls <args>:	 list given directory contents\n\
+cd <args>:    	 change directory\n\
+adduser:         add user to terminal\n\
+deluser:      	 del terminal user\n\
+man <args>:  	 help with commands\n\
+pwd:             print current directory\n\
+printf <string>: print string to screen\n\
+time:            shows current time\n\
+useradd <args>:  add user\n\
+userdel <args>:  delete user\n\
+whoami:          shows current user\n\
+exit:            exits the terminal\n\
+loguser:         use another account\n\
+cat <file>:      print file contents\n\
+echo <string>:   echoes string to the screen\n\
+exec <args>:     executes command\n\
+vimmer:          simple text editor\n\
 ");
 }

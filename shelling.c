@@ -13,8 +13,6 @@
 #include <string.h>
 #include <locale.h>
 
-#define CBLUE "\x1b[31;m"
-#define CGREEN "\x1b[32;m"
 
 // TODO: Fix resize window issue. It doens't refresh the way it should.
 // Lookup for functions that would fix this problem.
@@ -178,7 +176,6 @@ int main(){
 		blobSimulation(shell);
 		sleep(2);
 		execshell(shell);
-	//	
 	}
 	if(strcmp(options[cursorHighlight], options[1]) == 0){
 		wprintw(shell, "hi");
